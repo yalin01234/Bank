@@ -1,0 +1,30 @@
+package bank_project;
+
+import java.sql.Date;
+
+public class Log {
+	
+	private long timestamp;  // Long= 2 x INT  
+	private int  clientId;
+	private String description;
+	private float amount; // Enable to use with Decimal number 
+	
+	
+	
+    public Log (long timestamp,int clientId,String description,float amount) {
+    	this.timestamp=timestamp;
+    	this.clientId=clientId;
+    	this.description=description;
+    	this.amount=amount;
+    }
+
+
+
+	@Override
+	public String toString(){
+		return new Date(timestamp)+" "+clientId+" "+description+" "+amount;
+	}
+        
+        
+        
+}
