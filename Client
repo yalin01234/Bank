@@ -1,0 +1,194 @@
+package bank_project;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public abstract class Client {
+	
+	private int id;
+	private String name;
+	private float balance;
+
+    private ArrayList<Account> accounts =new ArrayList<Account>();
+		
+	protected  float commissionRate ;
+	protected  float interestRate ;
+	
+	public Client (int id,String name,float balance ) {
+		this.id=id;
+		this.name=name;
+		this.balance=balance;
+		
+			
+	}
+
+	public int getId() {
+		return id;
+	}
+		
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+    
+	
+	public float getBalance() {
+		return balance;
+	}
+	
+	public void setBalance(float balance) {
+		this.balance=balance;
+	}
+		
+	
+	public ArrayList<Account> getAccounts() {
+		return accounts;
+	}
+
+	
+	public void addAccount(Account a){
+		  accounts.add(a);	  
+		  Log l = new Log(System.currentTimeMillis(),id,name,balance);
+		  Logger Logger = new Logger("aaa");
+		  Logger.log(l); 			
+				
+			}
+		
+			
+		
+	   public void removeAccount(Account a){ 
+
+		for(int i=0;i<accounts.size();i++){ 
+		   	  
+
+			    if(accounts.get(i)!=null&&accounts.get(i).equals(a)){
+
+				balance= balance+ ((Account)accounts.get(i)).getBalance();
+
+				Log l=new Log(System.currentTimeMillis(),a.getId(),"Account " +((Account)accounts.get(i)).getId()+ " was closed by client",((Account)accounts.get(i)).getBalance());
+
+				accounts.remove(a);
+
+				Logger.log(l);
+
+				return;
+		}
+		}
+	}
+			
+
+		public void autoUpdateAccounts(){
+
+			for(Object a:accounts){
+
+				if(a!=null){
+
+					((Account)a).setBalance(((Account)a).getBalance()+0);
+
+				}
+
+			}
+
+		}
+	 
+	
+	public void deposit(float ammount) {  //להפקיד 
+		balance=balance+ammount;
+		
+	}
+	
+	
+	public void withdraw(float ammount)throws withdrawException{
+		float com=commissionRate*ammount/100;
+	    	if(balance-(ammount+com)>0){
+			System.out.println("11111");
+			System.out.println(balance);
+			balance=balance-(ammount+com);
+			System.out.println(balance);
+			Bank.addCommission(com);
+		}
+		else {
+			System.out.println("2222");
+			throw new withdrawException ("no money",this.id,this.balance,ammount);
+		}
+	}
+
+				
+  
+	 
+	
+        public float getFortune(){
+
+        float total=0;
+
+        for(Account a:accounts){
+
+        if(a!=null){
+
+        total=total+ a.getBalance();
+
+        }
+
+        }
+        return total;
+
+        }
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((accounts == null) ? 0 : accounts.hashCode());
+			result = prime * result + Float.floatToIntBits(balance);
+			result = prime * result + Float.floatToIntBits(commissionRate);
+			result = prime * result + id;
+			result = prime * result + Float.floatToIntBits(interestRate);
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			return result;
+		}
+
+		
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) return true;
+			if (obj == null) return false;
+			if (getClass() != obj.getClass())return false;
+			Client other = (Client) obj;
+			if (accounts == null) { 
+				if (other.accounts != null) return false;
+			} else if (!accounts.equals(other.accounts)) 
+				return false;
+			if (Float.floatToIntBits(balance) != Float.floatToIntBits(other.balance))
+				return false;
+			if (Float.floatToIntBits(commissionRate) != Float.floatToIntBits(other.commissionRate))
+				return false;
+			if (id != other.id)
+				return false;
+			if (Float.floatToIntBits(interestRate) != Float.floatToIntBits(other.interestRate))
+				return false;
+			if (name == null) { 
+				if (other.name != null) return false;
+			} else if (!name.equals(other.name)) return false;
+			return true;
+		}
+
+
+
+		
+	
+	
+
+	
+	
+//    public boolean equals(Object obj) {/// Ask Kobi 
+//	if(obj!=null && obj instanceof Client && ((Client)obj).getId()==id && ((Client)obj).getBalance()==this.balance){
+//		return true;
+//	}
+//	return false; 
+//}
+}
+
